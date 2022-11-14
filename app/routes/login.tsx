@@ -1,6 +1,6 @@
 import type { ActionArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useOutletContext} from "@remix-run/react";
+import { Link, useOutletContext} from "@remix-run/react";
 
 import {
   RainbowKitProvider,
@@ -75,10 +75,10 @@ export default function LoginPage() {
   return (
     <nav className="bg-[color:rgba(254,204,27,0.5)] px-2 sm:px-4 py-2.5 fixed w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600">
   <div className="container flex flex-wrap justify-between items-center mx-auto">
-  <a href="https://incentera.link/" className="flex items-center">
+  <Link to="/" className="flex items-center">
       <img src="/incentera.png" className="mr-3 h-6 sm:h-9" alt="Incentera Logo" />
       <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-black">Incentera</span>
-  </a>
+  </Link>
   <div className="flex md:order-2">
       <RainbowKitProvider
         chains={chains as Chain[]}
