@@ -5,6 +5,7 @@ import { useOutletContext} from "@remix-run/react";
 import {
   RainbowKitProvider,
   ConnectButton,
+  darkTheme,
 } from '@rainbow-me/rainbowkit';
 import type { Chain } from "wagmi";
 
@@ -72,7 +73,21 @@ export const meta: MetaFunction = () => {
 export default function LoginPage() {
   const chains = useOutletContext();
   return (
-    <RainbowKitProvider chains={chains as Chain[]}>
+    <nav className="bg-[color:rgba(254,204,27,0.5)] px-2 sm:px-4 py-2.5 fixed w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600">
+  <div className="container flex flex-wrap justify-between items-center mx-auto">
+  <a href="https://incentera.link/" className="flex items-center">
+      <img src="/incentera.png" className="mr-3 h-6 sm:h-9" alt="Incentera Logo" />
+      <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-black">Incentera</span>
+  </a>
+  <div className="flex md:order-2">
+      <RainbowKitProvider
+        chains={chains as Chain[]}
+        theme={darkTheme({accentColor: '#eab308',
+        accentColorForeground: 'white',
+        borderRadius: 'small',
+        fontStack: 'system',
+        overlayBlur: 'small'})}
+      >
       <div
         style={{
           display: 'flex',
@@ -83,6 +98,9 @@ export default function LoginPage() {
         <ConnectButton />
       </div>
     </RainbowKitProvider>
+    </div>
+  </div>
+</nav>
   )
   // const [searchParams] = useSearchParams();
   // const redirectTo = searchParams.get("redirectTo") || "/notes";
