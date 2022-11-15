@@ -11,8 +11,9 @@ import {
   useLoaderData,
 } from "@remix-run/react";
 import { configureChains, createClient, defaultChains, WagmiConfig } from 'wagmi';
-import { alchemyProvider } from 'wagmi/providers/alchemy';
+import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 import { publicProvider } from 'wagmi/providers/public';
+
 import {
   getDefaultWallets,
 } from '@rainbow-me/rainbowkit';
@@ -43,12 +44,23 @@ export const loader: LoaderFunction = () => {
 }
 
 export default function App() {
-  const { alchemyApiKey, enableTestnets } = useLoaderData();
+  const { alchemyApiKey, /* enableTestnets */ } = useLoaderData();
 
   const {client, chains} = useMemo(() => {
     const { chains, provider, webSocketProvider } = configureChains(
       defaultChains,
-      [alchemyProvider({ apiKey: alchemyApiKey }), publicProvider()],
+      [
+        jsonRpcProvider({
+          rpc: (chain) => (chain.id === 5 ? {
+            http: `https://eth-goerli.g.alchemy.com/v2/${alchemyApiKey}`,
+            webSocket: `wss://eth-goerli.g.alchemy.com/v2/${alchemyApiKey}`,
+          } : {
+            http: `https://eth-mainnet.g.alchemy.com/v2/${alchemyApiKey}`,
+            webSocket: `wss://eth-mainnet.g.alchemy.com/v2/${alchemyApiKey}`,
+          }),
+        }),
+        publicProvider()
+      ],
     );
 
     const { connectors } = getDefaultWallets({
