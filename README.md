@@ -1,8 +1,6 @@
-# Remix Indie Stack
+# incentera-dapp-v1
 
-![The Remix Indie Stack](https://repository-images.githubusercontent.com/465928257/a241fa49-bd4d-485a-a2a5-5cb8e4ee0abf)
-
-Learn more about [Remix Stacks](https://remix.run/stacks).
+Front-end repository for Incentera, based on the [Remix Indie Stack](https://remix.run/stacks).
 
 ```
 npx create-remix@latest --template remix-run/indie-stack
@@ -23,8 +21,6 @@ npx create-remix@latest --template remix-run/indie-stack
 - Code formatting with [Prettier](https://prettier.io)
 - Linting with [ESLint](https://eslint.org)
 - Static Types with [TypeScript](https://typescriptlang.org)
-
-Not a fan of bits of the stack? Fork it, change it, and use `npx create-remix --template your/repo`! Make it your own.
 
 ## Quickstart
 
@@ -59,14 +55,6 @@ The database seed script creates a new user with some data you can use to get st
 - Email: `rachel@remix.run`
 - Password: `racheliscool`
 
-### Relevant code:
-
-This is a pretty simple note-taking app, but it's a good example of how you can build a full stack app with Prisma and Remix. The main functionality is creating users, logging in and out, and creating and deleting notes.
-
-- creating users, and logging in and out [./app/models/user.server.ts](./app/models/user.server.ts)
-- user sessions, and verifying them [./app/session.server.ts](./app/session.server.ts)
-- creating, and deleting notes [./app/models/note.server.ts](./app/models/note.server.ts)
-
 ## Deployment
 
 This Remix Stack comes with two GitHub Actions that handle automatically deploying your app to production and staging environments.
@@ -86,8 +74,8 @@ Prior to your first deployment, you'll need to do a few things:
 - Create two apps on Fly, one for staging and one for production:
 
   ```sh
-  fly apps create incentera-dapp-v1-e1e0
-  fly apps create incentera-dapp-v1-e1e0-staging
+  fly apps create incentera-dapp-v1
+  fly apps create incentera-dapp-v1-staging
   ```
 
   > **Note:** Make sure this name matches the `app` set in your `fly.toml` file. Otherwise, you will not be able to deploy.
@@ -109,8 +97,8 @@ Prior to your first deployment, you'll need to do a few things:
 - Add a `SESSION_SECRET` to your fly app secrets, to do this you can run the following commands:
 
   ```sh
-  fly secrets set SESSION_SECRET=$(openssl rand -hex 32) --app incentera-dapp-v1-e1e0
-  fly secrets set SESSION_SECRET=$(openssl rand -hex 32) --app incentera-dapp-v1-e1e0-staging
+  fly secrets set SESSION_SECRET=$(openssl rand -hex 32) --app incentera-dapp-v1
+  fly secrets set SESSION_SECRET=$(openssl rand -hex 32) --app incentera-dapp-v1-staging
   ```
 
   If you don't have openssl installed, you can also use [1password](https://1password.com/password-generator/) to generate a random secret, just replace `$(openssl rand -hex 32)` with the generated secret.
@@ -118,8 +106,8 @@ Prior to your first deployment, you'll need to do a few things:
 - Create a persistent volume for the sqlite database for both your staging and production environments. Run the following:
 
   ```sh
-  fly volumes create data --size 1 --app incentera-dapp-v1-e1e0
-  fly volumes create data --size 1 --app incentera-dapp-v1-e1e0-staging
+  fly volumes create data --size 1 --app incentera-dapp-v1
+  fly volumes create data --size 1 --app incentera-dapp-v1-staging
   ```
 
 Now that everything is set up you can commit and push your changes to your repo. Every commit to your `main` branch will trigger a deployment to your production environment, and every commit to your `dev` branch will trigger a deployment to your staging environment.
