@@ -1,216 +1,165 @@
-import type { ActionArgs, MetaFunction } from "@remix-run/node";
+import type { ActionArgs, LoaderArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Link, useOutletContext} from "@remix-run/react";
+import { Link, useOutletContext } from "@remix-run/react";
 
 import {
   RainbowKitProvider,
   ConnectButton,
   darkTheme,
-} from '@rainbow-me/rainbowkit';
+} from "@rainbow-me/rainbowkit";
 import type { Chain } from "wagmi";
 
-import { createUserSession } from "~/session.server";
-import { verifyLogin } from "~/models/user.server";
-import { safeRedirect, validateEmail } from "~/utils";
-
-export async function loader(/* { request }: LoaderArgs */) {
-  // const userId = await getUserId(request);
-  // if (userId) return redirect("/");
+export async function loader({ request }: LoaderArgs) {
   return json({});
 }
 
-export async function action({ request }: ActionArgs) {
-  const formData = await request.formData();
-  const email = formData.get("email");
-  const password = formData.get("password");
-  const redirectTo = safeRedirect(formData.get("redirectTo"), "/notes");
-  const remember = formData.get("remember");
-
-  if (!validateEmail(email)) {
-    return json(
-      { errors: { email: "Email is invalid", password: null } },
-      { status: 400 }
-    );
-  }
-
-  if (typeof password !== "string" || password.length === 0) {
-    return json(
-      { errors: { email: null, password: "Password is required" } },
-      { status: 400 }
-    );
-  }
-
-  if (password.length < 8) {
-    return json(
-      { errors: { email: null, password: "Password is too short" } },
-      { status: 400 }
-    );
-  }
-
-  const user = await verifyLogin(email, password);
-
-  if (!user) {
-    return json(
-      { errors: { email: "Invalid email or password", password: null } },
-      { status: 400 }
-    );
-  }
-
-  return createUserSession({
-    request,
-    userId: user.id,
-    remember: remember === "on" ? true : false,
-    redirectTo,
-  });
-}
+export async function action({ request }: ActionArgs) {}
 
 export const meta: MetaFunction = () => {
   return {
-    title: "Login",
+    title: "Incentera",
   };
 };
 
 export default function LoginPage() {
   const chains = useOutletContext();
   return (
-    <nav className="bg-[color:rgba(254,204,27,0.5)] px-2 sm:px-4 py-2.5 fixed w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600">
-  <div className="container flex flex-wrap justify-between items-center mx-auto">
-  <Link to="/" className="flex items-center">
-      <img src="/incentera.png" className="mr-3 h-6 sm:h-9" alt="Incentera Logo" />
-      <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-black">Incentera</span>
-  </Link>
-  <div className="flex md:order-2">
-      <RainbowKitProvider
-        chains={chains as Chain[]}
-        theme={darkTheme({accentColor: '#eab308',
-        accentColorForeground: 'white',
-        borderRadius: 'small',
-        fontStack: 'system',
-        overlayBlur: 'small'})}
-      >
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          padding: '12px',
-        }}
-      >
-        <ConnectButton />
+    <div className="flex flex-col h-screen">
+      <nav className="fixed top-0 left-0 z-20 w-full border-b border-gray-200 bg-white px-2 py-2.5 dark:border-gray-600 sm:px-4">
+        <div className="container mx-auto flex items-center justify-between">
+          <Link to="/" className="flex items-center">
+            <img
+              src="/incentera.png"
+              className="mr-3 h-6 sm:h-9"
+              alt="Incentera Logo"
+            />
+            <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-black">
+              Incentera
+            </span>
+          </Link>
+          <div className="flex md:order-2">
+            <RainbowKitProvider
+              chains={chains as Chain[]}
+              theme={darkTheme({
+                accentColor: "#1d4ed8",
+                accentColorForeground: "white",
+                borderRadius: "small",
+                fontStack: "system",
+                overlayBlur: "small",
+              })}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  padding: "12px",
+                }}
+              >
+                <ConnectButton />
+              </div>
+            </RainbowKitProvider>
+          </div>
+        </div>
+      </nav>
+      
+      <div className="flex-1 bg-fixed bg-gradient-linear from-blue-500 to-blue-250">
+      <div className="mx-auto mt-20 max-w-7xl flex flex-row justify-center py-2 px-4 sm:px-6 lg:px-8">
+        <div className="mt-10 flex justify-center gap-8 ml-4">
+          <div className="w-full max-w-sm rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800">
+            <div className="flex flex-col items-center pt-5 pb-10">
+            <div className="flex flex-row items-center px-5">
+              <img
+                className="h-24 w-24 rounded-md shadow-lg"
+                src="/reputation-nft.png"
+                alt="Reputation NFT"
+              />
+              <div className="flex flex-col items-center px-5">
+              <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
+                Steve Ellis
+              </h5>
+              <span className="text-sm text-gray-500 dark:text-gray-400">
+                777 INT - Advanced
+              </span>
+              </div>
+              </div>
+              <div className="mt-4 flex space-x-3 md:mt-6">
+                <a
+                  href="/"
+                  className="inline-flex items-center rounded-lg bg-blue-700 px-4 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >
+                  View on OpenSea
+                </a>
+                <a
+                  href="/"
+                  className="inline-flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
+                >
+                  Edit Profile
+                </a>
+              </div>
+              <div className="flex flex-col">
+              <div className="flex items-center">
+              <div className="h-2.5 w-full mt-6 mx-2 rounded-full bg-gray-200 dark:bg-gray-700">
+                <div className="h-2.5 w-44 rounded-full bg-blue-600"></div>
+              </div>
+              </div>
+              <div className="m-1 flex flex-row">
+                <span className="text-sm mx-8 font-medium text-blue-700 dark:text-white">
+                  Novice
+                </span>
+                <span className="text-sm mx-8 font-medium text-blue-700 dark:text-white">
+                  Intermediate
+                </span>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-10 flex flex-col sm:space-y-0 ml-4">
+          <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
+              <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                  <th scope="col" className="py-3 px-6">
+                    Active jobs
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="light:bg-gray-900 light:border-gray-700 border-b bg-white">
+                  <td className="py-4 px-6">My first active job</td>
+                </tr>
+                <tr className="light:bg-gray-900 light:border-gray-700 border-b bg-white">
+                  <td className="py-4 px-6">My second active job</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <div className="mt-10 flex flex-col sm:space-y-0 mx-4">
+          <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
+              <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                  <th scope="col" className="py-3 px-6">
+                    Finished jobs
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="light:bg-gray-900 light:border-gray-700 border-b bg-white">
+                  <td className="py-4 px-6">My first finished job</td>
+                </tr>
+                <tr className="light:bg-gray-900 light:border-gray-700 border-b bg-white">
+                  <td className="py-4 px-6">My second finished job</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
-    </RainbowKitProvider>
     </div>
-  </div>
-</nav>
-  )
-  // const [searchParams] = useSearchParams();
-  // const redirectTo = searchParams.get("redirectTo") || "/notes";
-  // const actionData = useActionData<typeof action>();
-  // const emailRef = React.useRef<HTMLInputElement>(null);
-  // const passwordRef = React.useRef<HTMLInputElement>(null);
-
-  // React.useEffect(() => {
-  //   if (actionData?.errors?.email) {
-  //     emailRef.current?.focus();
-  //   } else if (actionData?.errors?.password) {
-  //     passwordRef.current?.focus();
-  //   }
-  // }, [actionData]);
-
-  // return (
-  //   <div className="flex min-h-full flex-col justify-center">
-  //     <div className="mx-auto w-full max-w-md px-8">
-  //       <Form method="post" className="space-y-6">
-  //         <div>
-  //           <label
-  //             htmlFor="email"
-  //             className="block text-sm font-medium text-gray-700"
-  //           >
-  //             Email address
-  //           </label>
-  //           <div className="mt-1">
-  //             <input
-  //               ref={emailRef}
-  //               id="email"
-  //               required
-  //               autoFocus={true}
-  //               name="email"
-  //               type="email"
-  //               autoComplete="email"
-  //               aria-invalid={actionData?.errors?.email ? true : undefined}
-  //               aria-describedby="email-error"
-  //               className="w-full rounded border border-gray-500 px-2 py-1 text-lg"
-  //             />
-  //             {actionData?.errors?.email && (
-  //               <div className="pt-1 text-red-700" id="email-error">
-  //                 {actionData.errors.email}
-  //               </div>
-  //             )}
-  //           </div>
-  //         </div>
-
-  //         <div>
-  //           <label
-  //             htmlFor="password"
-  //             className="block text-sm font-medium text-gray-700"
-  //           >
-  //             Password
-  //           </label>
-  //           <div className="mt-1">
-  //             <input
-  //               id="password"
-  //               ref={passwordRef}
-  //               name="password"
-  //               type="password"
-  //               autoComplete="current-password"
-  //               aria-invalid={actionData?.errors?.password ? true : undefined}
-  //               aria-describedby="password-error"
-  //               className="w-full rounded border border-gray-500 px-2 py-1 text-lg"
-  //             />
-  //             {actionData?.errors?.password && (
-  //               <div className="pt-1 text-red-700" id="password-error">
-  //                 {actionData.errors.password}
-  //               </div>
-  //             )}
-  //           </div>
-  //         </div>
-
-  //         <input type="hidden" name="redirectTo" value={redirectTo} />
-  //         <button
-  //           type="submit"
-  //           className="w-full rounded bg-blue-500  py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
-  //         >
-  //           Log in
-  //         </button>
-  //         <div className="flex items-center justify-between">
-  //           <div className="flex items-center">
-  //             <input
-  //               id="remember"
-  //               name="remember"
-  //               type="checkbox"
-  //               className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-  //             />
-  //             <label
-  //               htmlFor="remember"
-  //               className="ml-2 block text-sm text-gray-900"
-  //             >
-  //               Remember me
-  //             </label>
-  //           </div>
-  //           <div className="text-center text-sm text-gray-500">
-  //             Don't have an account?{" "}
-  //             <Link
-  //               className="text-blue-500 underline"
-  //               to={{
-  //                 pathname: "/join",
-  //                 search: searchParams.toString(),
-  //               }}
-  //             >
-  //               Sign up
-  //             </Link>
-  //           </div>
-  //         </div>
-  //       </Form>
-  //     </div>
-  //   </div>
-  // );
+    </div>
+  );
 }

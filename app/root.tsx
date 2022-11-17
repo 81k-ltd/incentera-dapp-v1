@@ -1,5 +1,9 @@
 import { useMemo } from "react";
-import type { LinksFunction, LoaderFunction, MetaFunction } from "@remix-run/node";
+import type {
+  LinksFunction,
+  LoaderFunction,
+  MetaFunction,
+} from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
   Links,
@@ -10,23 +14,26 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from "@remix-run/react";
-import { configureChains, createClient, defaultChains, WagmiConfig } from 'wagmi';
-import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
-import { publicProvider } from 'wagmi/providers/public';
-
 import {
-  getDefaultWallets,
-} from '@rainbow-me/rainbowkit';
+  configureChains,
+  createClient,
+  defaultChains,
+  WagmiConfig,
+} from "wagmi";
+import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
+import { publicProvider } from "wagmi/providers/public";
+
+import { getDefaultWallets } from "@rainbow-me/rainbowkit";
 
 import tailwindStylesheetUrl from "./styles/tailwind.css";
-import globalStylesUrl from './styles/global.css';
-import rainbowStylesUrl from '@rainbow-me/rainbowkit/styles.css';
+import globalStylesUrl from "./styles/global.css";
+import rainbowStylesUrl from "@rainbow-me/rainbowkit/styles.css";
 
 export const links: LinksFunction = () => {
   return [
-    { rel: 'stylesheet', href: globalStylesUrl },
+    { rel: "stylesheet", href: globalStylesUrl },
     { rel: "stylesheet", href: tailwindStylesheetUrl },
-    { rel: 'stylesheet', href: rainbowStylesUrl },
+    { rel: "stylesheet", href: rainbowStylesUrl },
   ];
 };
 
@@ -39,41 +46,47 @@ export const meta: MetaFunction = () => ({
 export const loader: LoaderFunction = () => {
   return json({
     alchemyApiKey: process.env.ALCHEMY_API_KEY as string,
-    enableTestnets: process.env.PUBLIC_ENABLE_TESTNETS as string
-  })
-}
+    enableTestnets: process.env.PUBLIC_ENABLE_TESTNETS as string,
+  });
+};
 
 export default function App() {
-  const { alchemyApiKey, /* enableTestnets */ } = useLoaderData();
+  const { alchemyApiKey /* enableTestnets */ } = useLoaderData();
 
-  const {client, chains} = useMemo(() => {
+  const { client, chains } = useMemo(() => {
     const { chains, provider, webSocketProvider } = configureChains(
       defaultChains,
       [
         jsonRpcProvider({
-          rpc: (chain) => (chain.id === 5 ? {
-            http: `https://eth-goerli.g.alchemy.com/v2/${alchemyApiKey}`,
-            webSocket: `wss://eth-goerli.g.alchemy.com/v2/${alchemyApiKey}`,
-          } : {
-            http: `https://eth-mainnet.g.alchemy.com/v2/${alchemyApiKey}`,
-            webSocket: `wss://eth-mainnet.g.alchemy.com/v2/${alchemyApiKey}`,
-          }),
+          rpc: (chain) =>
+            chain.id === 5
+              ? {
+                  http: `https://eth-goerli.g.alchemy.com/v2/${alchemyApiKey}`,
+                  webSocket: `wss://eth-goerli.g.alchemy.com/v2/${alchemyApiKey}`,
+                }
+              : {
+                  http: `https://eth-mainnet.g.alchemy.com/v2/${alchemyApiKey}`,
+                  webSocket: `wss://eth-mainnet.g.alchemy.com/v2/${alchemyApiKey}`,
+                },
         }),
-        publicProvider()
-      ],
+        publicProvider(),
+      ]
     );
 
     const { connectors } = getDefaultWallets({
-      appName: 'Incentera',
+      appName: "Incentera",
       chains,
     });
 
-    return {client: createClient({
-      autoConnect: true,
-      connectors,
-      provider,
-      webSocketProvider,
-    }), chains: chains}
+    return {
+      client: createClient({
+        autoConnect: true,
+        connectors,
+        provider,
+        webSocketProvider,
+      }),
+      chains: chains,
+    };
   }, [alchemyApiKey]);
 
   return (
@@ -85,12 +98,12 @@ export default function App() {
       <body className="h-full">
         {client && chains ? (
           <WagmiConfig client={client}>
-            <Outlet context={[chains]}/>
+            <Outlet context={[chains]} />
           </WagmiConfig>
-      ) : null}
-          <ScrollRestoration />
-          <Scripts />
-          <LiveReload />
+        ) : null}
+        <ScrollRestoration />
+        <Scripts />
+        <LiveReload />
       </body>
     </html>
   );

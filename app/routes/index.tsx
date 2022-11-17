@@ -11,28 +11,29 @@ export default function Index() {
               src="https://user-images.githubusercontent.com/1500684/157774694-99820c51-8165-4908-a031-34fc371ac0d6.jpg"
               alt="Sonic Youth On Stage"
             /> */}
-            <div className="absolute inset-0 bg-[color:rgba(254,204,27,0.5)] mix-blend-multiply" />
+            <div className="absolute inset-0 bg-[color:rgba(134,175,254,0.5)] mix-blend-multiply" />
           </div>
           <div className="relative px-4 pt-16 pb-8 sm:px-6 sm:pt-24 sm:pb-14 lg:px-8 lg:pb-20 lg:pt-32">
             <h1 className="text-center text-6xl font-extrabold tracking-tight sm:text-8xl lg:text-9xl">
-              <span className="block uppercase text-black-500 drop-shadow-md">
+              <span className="text-black-500 block uppercase drop-shadow-md">
                 Incentera
               </span>
             </h1>
             <p className="mx-auto mt-6 max-w-lg text-center text-xl text-black sm:max-w-3xl">
-              A trust-minimised protocol for incentivised public health alerting.
+              A trust-minimised protocol for incentivised public health
+              alerting.
             </p>
             <div className="mx-auto mt-10 max-w-sm sm:flex sm:max-w-none sm:justify-center">
               <div className="space-y-4 sm:mx-auto sm:inline-grid sm:grid-cols-2 sm:gap-5 sm:space-y-0">
                 <a
                   href="https://github.com/81k-ltd/"
-                  className="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-3 text-base font-medium text-yellow-700 shadow-sm hover:bg-yellow-50 sm:px-8"
+                  className="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-3 text-base font-medium text-blue-700 shadow-sm hover:bg-blue-50 sm:px-8"
                 >
                   GitHub
                 </a>
                 <Link
                   to="/login"
-                  className="flex items-center justify-center rounded-md bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600"
+                  className="flex items-center justify-center rounded-md bg-blue-500 px-4 py-3 font-medium text-white hover:bg-blue-600"
                 >
                   Enter App
                 </Link>
